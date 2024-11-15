@@ -1,0 +1,89 @@
+#!/bin/bash
+# shellcheck source=meta-facebook/meta-yosemite4/recipes-yosemite4/plat-tool/files/yosemite4-common-functions
+source /usr/libexec/yosemite4-common-functions
+
+is_nuvoton_board="$(check_nuvoton_board)"
+
+enable_all_fan_input()
+{
+    # There is no fan_enable for 2nd source Fan IC: NCT7363
+    if find /sys/bus/i2c/devices/*/hwmon/*/fan*_enable -print -quit 2>/dev/null | grep -q .; then
+      for file in /sys/bus/i2c/devices/*/hwmon/*/fan*_enable
+      do
+        echo 1 > "${file}"
+      done
+    fi
+}
+
+set_all_fan_pwm_80_percent() {
+    # 255 * 80% = 204
+    pwm_value=204
+
+    for pwm_node in /sys/bus/i2c/devices/*/hwmon/*/pwm*
+    do
+        if [[ ! "$pwm_node" =~ _enable ]]; then
+            curr_pwm=$(cat "$pwm_node")
+
+            # Set PWM to 80% if current PWM is higher than 80%.
+            if [[ "$curr_pwm" -ge "$pwm_value" ]]; then
+              echo $pwm_value > "$pwm_node"
+            fi
+        fi
+    done
+}
+
+set_sd_bic_interface_to_i3c()
+{
+    for host_bus in $(seq 0 7);
+    do
+      GPIOCHIP=$(basename /sys/bus/i2c/devices/"$host_bus"-0023/*gpiochip*)
+      if [ "$GPIOCHIP" != "*gpiochip*" ]; then
+        gpioset "$GPIOCHIP" 24=1
+      fi
+    done
+}
+
+# set initial value for GPIO output pins
+set_gpio EN_P5V_USB_CPLD_R    1
+set_gpio EN_NIC0_POWER_BMC_R  1
+set_gpio EN_NIC1_POWER_BMC_R  1
+set_gpio EN_NIC2_POWER_BMC_R  1
+set_gpio EN_NIC3_POWER_BMC_R  1
+set_gpio FM_BMC_RTCRST_R      0
+set_gpio RST_USB_HUB_R_N      1
+set_gpio FM_BMC_READY_R2      1
+set_gpio SPI_LOCK_REQ_BMC_N   1
+set_gpio EN_P3V_BAT_SCALED_R  0
+set_gpio FM_BMC_SLED_CYCLE_R  0
+
+set_gpio NIC0_MAIN_PWR_EN 1
+set_gpio NIC1_MAIN_PWR_EN 1
+set_gpio NIC2_MAIN_PWR_EN 1
+set_gpio NIC3_MAIN_PWR_EN 1
+
+if [ -z "$is_nuvoton_board" ]
+then
+    # short-term set gpio v0~v3 to input pin for slot5~8 reset button
+    if [ ! -c "/dev/mem" ]; then
+        mknod -m 660 /dev/mem c 1 1
+    fi
+    chown root:kmem /dev/mem
+    devmem 0x1e78008c 32 0x19000000
+
+    # adjust the i2c clock duty cycle for bus 11
+    devmem 0x1E78A604 32 0x00487006
+fi
+
+# Enable all fan input as early as possible
+enable_all_fan_input
+
+# Set all fan PWM to 80%
+set_all_fan_pwm_80_percent
+
+if [ -n "$is_nuvoton_board" ]
+then
+    # Set interface to SD BIC to I3C for Nuvoton BMC
+    set_sd_bic_interface_to_i3c
+fi
+
+exit 0

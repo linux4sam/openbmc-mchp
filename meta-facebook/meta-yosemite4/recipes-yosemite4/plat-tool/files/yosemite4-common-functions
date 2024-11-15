@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set_gpio()
+{
+    local NET_NAME=$1
+    local OUT_VAL=$2
+    mapfile -t -d " " GPIO_INFO < <(gpiofind "$NET_NAME")
+    if [ "${#GPIO_INFO[@]}" -ne 2 ]; then
+        echo "set_gpio: can not find gpio, $NET_NAME"
+        return 1
+    fi
+
+    echo -n "set_gpio: set $NET_NAME = $OUT_VAL"
+    if ! gpioset "${GPIO_INFO[0]}" "${GPIO_INFO[1]%$'\n'}"="$OUT_VAL"; then
+        echo " failed"
+        return 1
+    fi
+
+    echo " success"
+    return 0
+}
+
+check_nuvoton_board()
+{
+    set +e
+    grep nuvoton /sys/firmware/devicetree/base/compatible
+    return 0
+}
+
+get_product_version()
+{
+    local FRU_NAME=$1
+    local PRODUCT_VERSION
+    PRODUCT_VERSION=$(busctl get-property xyz.openbmc_project.EntityManager /xyz/openbmc_project/inventory/system/board/Yosemite_4_"$FRU_NAME" xyz.openbmc_project.Inventory.Decorator.Revision Version| awk -F\" '{print $2}')
+    echo "$PRODUCT_VERSION"
+}
+
+get_product_model()
+{
+    local FRU_NAME=$1
+    local PRODUCT_MODEL
+    PRODUCT_MODEL=$(busctl get-property xyz.openbmc_project.EntityManager /xyz/openbmc_project/inventory/system/board/Yosemite_4_"$FRU_NAME" xyz.openbmc_project.Inventory.Decorator.Asset Model| awk -F\" '{print $2}')
+    echo "$PRODUCT_MODEL"
+}

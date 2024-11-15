@@ -1,0 +1,14 @@
+[Unit]
+Description=Ampere Ethernet over USB gadget device
+After=multi-user.target
+StartLimitIntervalSec=20
+StartLimitBurst=3
+
+[Service]
+ExecStart=/usr/sbin/ampere_usbnet.sh
+Restart=on-failure
+RestartMode=direct
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

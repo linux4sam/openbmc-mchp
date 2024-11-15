@@ -1,0 +1,28 @@
+{
+    "leds": [
+        {
+            "group" : "bmc_booted",
+            "members" : [
+                {
+                    "Name" : "heartbeat",
+                    "Action" : "Blink",
+                    "Priority" : "Blink",
+                    "DutyOn" : 50,
+                    "Period" : 1000
+                }
+            ]
+        },
+        {
+            "group": "system_fault",
+            "members": [
+                {
+                    "Name": "system-fault",
+                    "Action": "Blink",
+                    "Priority" : "Blink",
+                    "DutyOn": 50,
+                    "Period": 250
+                }
+            ]
+        }
+    ]
+}

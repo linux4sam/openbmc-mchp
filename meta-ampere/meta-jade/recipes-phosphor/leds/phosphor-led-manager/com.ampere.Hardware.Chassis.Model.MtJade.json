@@ -1,0 +1,158 @@
+{
+	"leds": [
+		{
+			"group": "bmc_booted",
+			"members": [
+			]
+		},
+		{
+			"group": "power_on",
+			"members": [
+			]
+		},
+		{
+			"group": "gpio_fault",
+			"members": [
+				{
+					"Name": "fault",
+					"Action": "On",
+					"DutyOn": 50,
+					"Period": 0,
+					"Priority": "On"
+				}
+			]
+		},
+		{
+			"group": "enclosure_identify",
+			"members": [
+				{
+					"Name": "identify",
+					"Action": "On",
+					"Priority": "On",
+					"DutyOn": 50,
+					"Period": 1000
+				}
+			]
+		},
+		{
+			"group": "enclosure_identify_blink",
+			"members": [
+				{
+					"Name": "identify",
+					"Action": "Blink",
+					"Priority": "On",
+					"DutyOn": 50,
+					"Period": 1000
+				}
+			]
+		},
+		{
+			"group": "fan3_fault",
+			"members": [
+				{
+					"Name": "fault",
+					"Action": "On",
+					"Priority": "On",
+					"DutyOn": 50,
+					"Period": 1000
+				}
+			]
+		},
+		{
+			"group": "fan4_fault",
+			"members": [
+				{
+					"Name": "fault",
+					"Action": "On",
+					"Priority": "On",
+					"DutyOn": 50,
+					"Period": 1000
+				}
+			]
+		},
+		{
+			"group": "fan5_fault",
+			"members": [
+				{
+					"Name": "fault",
+					"Action": "On",
+					"Priority": "On",
+					"DutyOn": 50,
+					"Period": 1000
+				}
+			]
+		},
+		{
+			"group": "fan6_fault",
+			"members": [
+				{
+					"Name": "fault",
+					"Action": "On",
+					"Priority": "On",
+					"DutyOn": 50,
+					"Period": 1000
+				}
+			]
+		},
+		{
+			"group": "fan7_fault",
+			"members": [
+				{
+					"Name": "fault",
+					"Action": "On",
+					"Priority": "On",
+					"DutyOn": 50,
+					"Period": 1000
+				}
+			]
+		},
+		{
+			"group": "fan8_fault",
+			"members": [
+				{
+					"Name": "fault",
+					"Action": "On",
+					"Priority": "On",
+					"DutyOn": 50,
+					"Period": 1000
+				}
+			]
+		},
+		{
+			"group": "psu_fault",
+			"members": [
+				{
+					"Name": "fault",
+					"Action": "On",
+					"Priority": "On",
+					"DutyOn": 50,
+					"Period": 1000
+				}
+			]
+		},
+		{
+			"group": "ras_ue_fault",
+			"members": [
+				{
+					"Name": "fault",
+					"Action": "On",
+					"Priority": "On",
+					"DutyOn": 50,
+					"Period": 1000
+				}
+			]
+		},
+		{
+			"group": "overtemp_fault",
+			"members": [
+				{
+					"Name": "fault",
+					"Action": "On",
+					"Priority": "On",
+					"DutyOn": 50,
+					"Period": 1000
+				}
+			]
+		}
+	]
+}

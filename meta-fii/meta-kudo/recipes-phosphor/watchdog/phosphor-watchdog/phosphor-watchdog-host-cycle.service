@@ -1,0 +1,8 @@
+[Unit]
+Description=Watchdog power state power hotswap
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+ExecStart=echo "Watchdog PowerCycle Action happened (no ops)"
+SyslogIdentifier=phosphor-watchdog

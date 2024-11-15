@@ -1,0 +1,18 @@
+bmc_booted:
+    HB_LED:
+        Action: 'Blink'
+        DutyOn: 50
+        Period: 1000
+        Priority: 'Blink'
+
+enclosure_identify:
+    UID_LED:
+        Action: 'On'
+        Priority: 'Blink'
+
+enclosure_identify_blink:
+    UID_LED:
+        Action: 'Blink'
+        DutyOn: 50
+        Period: 1000
+        Priority: 'Blink'
