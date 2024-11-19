@@ -5,6 +5,7 @@ Subject: [PATCH] dts: include optee dtsi
 
 Include sama5d2-optee.dtsi in at91-sama5d27_som1_ek.dts
 
+Upstream-Status: Inappropriate [only specific to optee configuration]
 Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
 ---
  arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 1 +

@@ -3,7 +3,6 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/:"
 SRC_URI:append = " \
 	file://hostapd@.service \
 	file://wilc_hostapd_open.conf \
-	file://wilc_hostapd_wep.conf \
 	file://wilc_hostapd_wpa.conf \
 "
 
@@ -26,6 +25,5 @@ do_install:append () {
 	install -d ${D}${sysconfdir}/network
 	install -m 0644 ${WORKDIR}/hostapd@.service ${D}${sysconfdir}/systemd/system
 	install -m 0644 ${WORKDIR}/wilc_hostapd_open.conf ${D}${sysconfdir}/network
-	install -m 0644 ${WORKDIR}/wilc_hostapd_wep.conf ${D}${sysconfdir}/network
 	install -m 0644 ${WORKDIR}/wilc_hostapd_wpa.conf ${D}${sysconfdir}/network
 }
