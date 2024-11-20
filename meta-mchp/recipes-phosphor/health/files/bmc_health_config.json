@@ -1,0 +1,12 @@
+{
+    "Storage_RW": {
+        "Path": "/",
+        "Threshold": {
+            "Critical_Lower": {
+                "Value": 10.0,
+                "Log": true,
+                "Target": ""
+            }
+        }
+    }
+}
