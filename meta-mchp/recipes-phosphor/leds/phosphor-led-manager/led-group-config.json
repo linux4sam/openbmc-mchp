@@ -1,0 +1,16 @@
+{
+    "leds": [
+        {
+            "group" : "example",
+            "members" : [
+                {
+                    "Name" : "example",
+                    "Action" : "Blink",
+                    "Priority" : "Blink",
+                    "DutyOn" : 50,
+                    "Period" : 1000
+                }
+            ]
+        }
+    ]
+}
