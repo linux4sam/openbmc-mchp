@@ -24,7 +24,7 @@ SRC_URI += " \
   file://gbmc-br-dhcp.sh \
   file://50-gbmc-psu-hardreset.sh.in \
   file://51-gbmc-reboot.sh \
-  file://gbmc-br-dhcp.service \
+  file://gbmc-br-dhcp@.service \
   file://gbmc-br-dhcp-term.sh \
   file://gbmc-br-dhcp-term.service \
   file://gbmc-br-lib.sh \
@@ -37,6 +37,7 @@ FILES:${PN}:append = " \
   ${datadir}/gbmc-ip-monitor \
   ${datadir}/gbmc-br-dhcp \
   ${datadir}/gbmc-br-lib.sh \
+  ${systemd_system_unitdir} \
   ${systemd_unitdir}/network \
   ${sysconfdir}/nftables \
   "
@@ -53,7 +54,6 @@ RDEPENDS:${PN}:append = " \
 
 SYSTEMD_SERVICE:${PN} += " \
   gbmc-br-hostname.service \
-  gbmc-br-dhcp.service \
   gbmc-br-dhcp-term.service \
   gbmc-br-load-ip.service \
   gbmc-br-ra.service \
@@ -77,6 +77,11 @@ GBMC_ULA_PREFIX = "fdb5:0481:10ce:0"
 # coordinated powercycle
 GBMC_COORDINATED_POWERCYCLE ?= "true"
 
+# Allow machines to upgrade all netboot warm reboots into powercyles in case
+# they have stability issues performing them. We prefer machines avoid this
+# setting and fix any outstanding issues.
+GBMC_NETBOOT_UPGRADE_REBOOT ?= ""
+
 def mac_to_eui64(mac):
   if not mac:
     return ''
@@ -86,6 +91,9 @@ def mac_to_eui64(mac):
   b.insert(3, 0xff)
   idx = range(0, len(b)-1, 2)
   return ':'.join([format((b[i] << 8) + b[i+1], '04x') for i in idx])
+
+def macs_to_eui64(macs):
+  return ' '.join([mac_to_eui64(mac) for mac in macs.split(' ')])
 
 GBMC_BRIDGE_INTFS ?= ""
 
@@ -109,9 +117,13 @@ do_install() {
   install -d -m0755 $netdir
 
   if [ ! -z "${GBMC_BR_MAC_ADDR}" ]; then
-    sfx='${@mac_to_eui64(GBMC_BR_MAC_ADDR)}'
-    addr="[Address]\nAddress=${GBMC_ULA_PREFIX}:$sfx/64\nPreferredLifetime=0\n"
-    addr="$addr[Address]\nAddress=fe80::$sfx/64\nPreferredLifetime=0"
+    eui64_list="${@macs_to_eui64(d.getVar('GBMC_BR_MAC_ADDR'))}"
+    addr=""
+    for eui64 in $eui64_list
+    do
+      addr="$addr[Address]\nAddress=${GBMC_ULA_PREFIX}:$eui64/64\nPreferredLifetime=0\n"
+      addr="$addr[Address]\nAddress=fe80::$eui64/64\nPreferredLifetime=0\n"
+    done
     sed -i "s,@ADDR@,$addr," ${WORKDIR}/-bmc-gbmcbr.network.in
   else
     sed -i '/@ADDR@/d' ${WORKDIR}/-bmc-gbmcbr.network.in
@@ -143,12 +155,17 @@ do_install() {
   install -m0755 ${WORKDIR}/gbmc-br-dhcp-term.sh ${D}${libexecdir}/
   install -d -m0755 ${D}${systemd_system_unitdir}
   install -m0644 ${WORKDIR}/gbmc-br-hostname.service ${D}${systemd_system_unitdir}/
-  install -m0644 ${WORKDIR}/gbmc-br-dhcp.service ${D}${systemd_system_unitdir}/
+  install -m0644 ${WORKDIR}/gbmc-br-dhcp@.service ${D}${systemd_system_unitdir}/
+  wantdir=${D}${systemd_system_unitdir}/multi-user.target.wants
+  install -d -m0755 $wantdir
+  ln -sv ../gbmc-br-dhcp@.service $wantdir/gbmc-br-dhcp@gbmcbr.service
   install -m0644 ${WORKDIR}/gbmc-br-dhcp-term.service ${D}${systemd_system_unitdir}/
   install -m0644 ${WORKDIR}/gbmc-br-load-ip.service ${D}${systemd_system_unitdir}/
   install -d -m0755 ${D}${datadir}/gbmc-br-dhcp
 
-  sed 's,@COORDINATED_POWERCYCLE@,${GBMC_COORDINATED_POWERCYCLE},' ${WORKDIR}/50-gbmc-psu-hardreset.sh.in >${WORKDIR}/50-gbmc-psu-hardreset.sh
+  sed -e 's,@COORDINATED_POWERCYCLE@,${GBMC_COORDINATED_POWERCYCLE},' \
+      -e 's,@UPGRADE_REBOOT@,${GBMC_NETBOOT_UPGRADE_REBOOT},' \
+    ${WORKDIR}/50-gbmc-psu-hardreset.sh.in >${WORKDIR}/50-gbmc-psu-hardreset.sh
   install -m0644 ${WORKDIR}/50-gbmc-psu-hardreset.sh ${D}${datadir}/gbmc-br-dhcp/
   install -m0644 ${WORKDIR}/51-gbmc-reboot.sh ${D}${datadir}/gbmc-br-dhcp/
 

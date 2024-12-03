@@ -8,64 +8,19 @@ source /usr/libexec/phosphor-state-manager/power-cmd
 # shellcheck source=meta-facebook/meta-yosemite4/recipes-yosemite4/plat-tool/files/yosemite4-common-functions
 source /usr/libexec/yosemite4-common-functions
 
-GPIOCHIP_IO_EXP_SLOT_PWR_CTRL=$(basename "/sys/bus/i2c/devices/$SPIDER_BOARD_IO_EXP_BUS_NUM-00$IO_EXP_SLOT_PWR_CTRL_ADDR/"*gpiochip*)
-GPIOCHIP_IO_EXP_SLOT_12V_STATUS_CTRL=$(basename "/sys/bus/i2c/devices/$MANAGEMENT_BOARD_IO_EXP_BUS_NUM-00$IO_EXP_SLED_PWR_CTRL_ADDR/"*gpiochip*)
-
 #IO 0:7 input port for showing slot 1:8 power status
 #IO 8:16 output port for controlling slot 1:8 power status
 CHASSIS_ID=$1
+IO_EXP_P0_PWRGD_R_OUT=18
 IO_EXP_SLOT_PWR_STATUS=$((CHASSIS_ID - 1))
 IO_EXP_SLOT_PWR_CTRL=$((IO_EXP_SLOT_PWR_STATUS + 8))
 IO_EXP_SLOT_12V_STATUS=$((CHASSIS_ID + 23))
 
+GPIOCHIP_IO_EXP_SLOT_PWR_CTRL=$(basename "/sys/bus/i2c/devices/$SPIDER_BOARD_IO_EXP_BUS_NUM-00$IO_EXP_SLOT_PWR_CTRL_ADDR/"*gpiochip*)
+GPIOCHIP_IO_EXP_SLOT_12V_STATUS_CTRL=$(basename "/sys/bus/i2c/devices/$MANAGEMENT_BOARD_IO_EXP_BUS_NUM-00$IO_EXP_SLED_PWR_CTRL_ADDR/"*gpiochip*)
+GPIOCHIP_IO_EXP_HOST_POWER_STATUS=$(basename "/sys/bus/i2c/devices/$IO_EXP_SLOT_PWR_STATUS-0023/"*gpiochip*)
+
 is_nuvoton_board="$(check_nuvoton_board)"
-
-enable_i3c_hub()
-{
-    local target_slot="$CHASSIS_ID"
-    local hub_path
-    local offset_file
-    local access_file
-    local current_port
-    local mask=1
-
-    echo "Do 12V on enable i3c-hub"
-    sleep 1
-    if [ "$target_slot" -lt 5 ]; then
-        hub_path="/sys/kernel/debug/i3c-hub-0-*/reg"
-        echo "Slot${target_slot} on i3c hub 0."
-    else
-        hub_path="/sys/kernel/debug/i3c-hub-1-*/reg"
-        echo "Slot${target_slot} on i3c hub 1."
-    fi
-
-    for file in $hub_path/{offset,access}; do
-        if [[ $file == *"/offset" ]]; then
-            offset_file="$file"
-        elif [[ $file == *"/access" ]]; then
-            access_file="$file"
-        fi
-    done
-
-    echo "Unlock i3c hub register."
-    echo 16 > "$offset_file"
-    echo 105 > "$access_file"
-
-    echo "Enable slot${target_slot} i3c port."
-    echo 18 > "$offset_file"
-    current_port=$(cat "$access_file")
-    if [ "$target_slot" -gt 4 ]; then
-        ((target_slot=target_slot-4))
-    fi
-    mask=$((mask << (--target_slot)))
-    current_port=$((current_port | mask))
-    echo $current_port > "$access_file"
-    cat "$access_file"
-
-    echo "Lock i3c hub register."
-    echo 16 > "$offset_file"
-    echo 0 > "$access_file"
-}
 
 # Server 12v power on
 chassis-power-on()
@@ -90,7 +45,6 @@ chassis-power-on()
                 echo "Failed to inform management CPLD that slot$1 is 12V on"
             fi
         fi
-        enable_i3c_hub
 
         # Wait for standby sensors to be ready
         sleep 2
@@ -112,10 +66,27 @@ fi
 
 if [ "$chassis_status" == "$STATE_OFF" ]
 then
+    # Check if PRSNT_SB_SLOT{1~8}_N is exist, if not exist, continues power-on process
+    if [ ! -f "/tmp/gpio/PRSNT_SB_SLOT${1}_N" ]; then
+        echo "PRSNT_SB_SLOT${1}_N is not exist, continue power-on process"
+    else
+        slot_presence=$(cat /tmp/gpio/PRSNT_SB_SLOT"${1}"_N)
+        if [ "$slot_presence" -ne 0 ]; then
+            echo "Chassis$1 is not present, skip power-on process"
+            exit 1
+        fi
+    fi
+
     chassis-power-on
-    /usr/libexec/phosphor-state-manager/wait-until-mctp-connection-done "$CHASSIS_ID" && systemctl restart "phosphor-discover-system-state@$CHASSIS_ID.service"
-    exit 0;
+    /usr/libexec/phosphor-state-manager/wait-until-mctp-connection-done "$CHASSIS_ID"
 else
     echo "Chassis$1 is already on"
-    exit 0;
 fi
+
+host_status=$(gpio_get "$GPIOCHIP_IO_EXP_HOST_POWER_STATUS" "$IO_EXP_P0_PWRGD_R_OUT")
+if [ "$host_status" != "$STATE_ON" ]
+then
+    systemctl restart "phosphor-discover-system-state@$CHASSIS_ID.service"
+    echo "Power on Host$CHASSIS_ID"
+fi
+exit 0;

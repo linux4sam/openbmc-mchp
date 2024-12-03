@@ -11,7 +11,7 @@ COMPATIBLE_MACHINE = '(sama5d3-xplained|sama5d3-xplained-sd|at91sam9x5ek|at91sam
 SRC_URI = "git://github.com/linux4microchip/dt-overlay-mchp.git;protocol=https;branch=master"
 
 PV = "1.0+git${SRCPV}"
-SRCREV = "3fbdd559c6513ad470ae9a07de56b5dabdeb00c7"
+SRCREV = "4c6f612138de2fc477e7aa1fd1ab527ab94cc461"
 
 DEPENDS = "virtual/kernel u-boot-mkimage-native dtc-native"
 

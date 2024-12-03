@@ -33,9 +33,15 @@ source /usr/share/gbmc-br-lib.sh || exit
 # hooks that are executed after each event.
 gbmc_br_source_dir /usr/share/gbmc-br-dhcp || exit
 
+# We don't want to allow 2 simultaneous sessions. Check for a pidfile
+PID_FILE=/run/gbmc-br-dhcp.pid
+exec {PID_FD}<>$PID_FILE
+# If we can't acquire the lock we already have a successful DHCP process in the works
+flock -xn $PID_FD || exit 0
+
 # Write out the current PID and cleanup when complete
-trap 'rm -f /run/gbmc-br-dhcp.pid' EXIT
-echo "$$" >/run/gbmc-br-dhcp.pid
+trap 'rm -f $PID_FILE' EXIT
+echo "$$" >&$PID_FD
 
 if [ "$1" = bound ]; then
   # Variable is from the environment via udhcpc6
@@ -46,7 +52,9 @@ if [ "$1" = bound ]; then
   pfx_bytes=()
   ip_to_bytes pfx_bytes "$ipv6"
   # Ensure we are a BMC and have a suffix nibble, the 0th index is reserved
-  if (( pfx_bytes[8] != 0xfd || (pfx_bytes[9] & 0xf) == 0 )); then
+  # Alternatively, we may also have received a /64 for the OOB address
+  if (( pfx_bytes[8] != 0xfd || (pfx_bytes[9] & 0xf) == 0 )) &&
+     (( pfx_bytes[8] != 0 || pfx_bytes[9] != 0 )); then
     echo "Invalid address prefix ${ipv6}" >&2
     update-dhcp-status 'ONGOING' "Invalid address prefix ${ipv6}"
     exit 1
@@ -83,5 +91,4 @@ if [ "$1" = bound ]; then
   # running a service that reports completion
   echo 'Signaling dhcp done' >&2
   update-dhcp-status 'DONE' "Netboot finished"
-
 fi
