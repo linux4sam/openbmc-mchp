@@ -63,6 +63,7 @@ Microchip supported machines are:
 - sama5d27-som1-ek-sd
 - sama5d27-wlsom1-ek-sd
 - sama5d29-curiosity-sd
+- sama7d65-curiosity-sd
 - sama7g5ek-sd
 
 Other supported machines can be found under
