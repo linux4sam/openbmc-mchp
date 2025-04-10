@@ -4,7 +4,7 @@ require u-boot-envs-atmel.inc
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://README;beginline=1;endline=22;md5=b5410c33378a67de244a5877f9ff9a27"
 
-SRCREV = "a9a3591254c5cca051793bb693ee7b7952693625"
+SRCREV = "dc7aff3a3e957a73d2dfdaf84b227a1ea66dd730"
 
 PV = "v2024.07-mchp+git${SRCPV}"
 
@@ -24,6 +24,7 @@ COMPATIBLE_MACHINE = '(at91sam9x5ek|at91sam9rlek|at91sam9m10g45ek\
 |sam9x60-curiosity|sam9x60-curiosity-sd\
 |sam9x75-curiosity|sam9x75-curiosity-sd\
 |sam9x75eb|sam9x75eb-sd\
+|sama7d65-curiosity|sama7d65-curiosity-sd\
 )'
 
 UBRANCH = "u-boot-2024.07-mchp"
