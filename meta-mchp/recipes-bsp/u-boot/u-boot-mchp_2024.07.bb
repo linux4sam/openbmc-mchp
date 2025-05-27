@@ -30,8 +30,13 @@ COMPATIBLE_MACHINE = '(at91sam9x5ek|at91sam9rlek|at91sam9m10g45ek\
 UBRANCH = "u-boot-2024.07-mchp"
 
 SRC_URI = "git://github.com/linux4microchip/u-boot-mchp.git;protocol=https;branch=${UBRANCH} \
-           file://fw_env.config"
+           file://fw_env.config \
+           file://bootm-len.cfg"
 
 S = "${WORKDIR}/git"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+do_configure:append() {
+    cat ${WORKDIR}/bootm-len.cfg >> ${S}/configs/${UBOOT_MACHINE}
+}

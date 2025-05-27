@@ -293,3 +293,10 @@ FEATURE_PACKAGES_obmc-system-mgmt = ""
 # the obmc-phosphor-image
 KERNEL_MODULE_AUTOLOAD:append = " atmel_usba_udc g_serial"
 KERNEL_MODULE_AUTOLOAD:append:sama5d27-wlsom1-ek-sd = " wilc-sdio"
+
+IMAGE_CLASSES:append = " image_types_mchp"
+
+# Partition sizes for the SD card layout (in MiB)
+BOOT_PARTITION_SIZE_MB = "16"
+ROFS_PARTITION_SIZE_MB = "300"
+RWFS_PARTITION_SIZE_MB = "1024"

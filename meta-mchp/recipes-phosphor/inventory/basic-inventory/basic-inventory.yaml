@@ -1,0 +1,13 @@
+events:
+  - name: Create minimal /system and BMC inventory
+    description: >
+      Ensure /system and /system/chassis/motherboard/bmc exist in the inventory for updater association validity.
+    type: startup
+    actions:
+      - name: createObjects
+        objs:
+          /system:
+            xyz.openbmc_project.Inventory.Item: {}
+          /system/chassis/motherboard/bmc:
+            xyz.openbmc_project.Inventory.Item: {}
+            xyz.openbmc_project.Inventory.Item.Bmc: {}

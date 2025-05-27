@@ -1,0 +1,5 @@
+part /boot-a --source bootimg-partition --ondisk @MMC_DEV@ --fstype=vfat --label boot-a --active --align 4 --size @BOOT_PARTITION_SIZE_MB@ --no-fstab-update
+part /boot-b --source bootimg-partition --ondisk @MMC_DEV@ --fstype=vfat --label boot-b --align 4 --size @BOOT_PARTITION_SIZE_MB@ --no-fstab-update
+part /root-a --source rootfs --ondisk @MMC_DEV@ --fstype=ext4 --label rofs-a --align 4 --size @ROFS_PARTITION_SIZE_MB@ --no-fstab-update
+part /root-b --source rootfs --ondisk @MMC_DEV@ --fstype=ext4 --label rofs-b --align 4 --size @ROFS_PARTITION_SIZE_MB@ --no-fstab-update
+part --ondisk @MMC_DEV@ --fstype=ext4 --label rwfs --align 4 --size @RWFS_PARTITION_SIZE_MB@ --no-fstab-update
