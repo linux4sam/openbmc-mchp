@@ -81,6 +81,11 @@ Once you know the target (e.g. sam9x75-curiosity-sd), source the `setup` script 
 bitbake obmc-phosphor-image
 ```
 
+The relevant resulting images (for this example sam9x75-curiosity-sd target) will be:
+
+ - <root dir>/build/sam9x75-curiosity-sd/tmp/deploy/images/sam9x75-curiosity-sd/obmc-phosphor-image-sam9x75-curiosity-sd.wic (full SD image)
+ - <root dir>/build/sam9x75-curiosity-sd/tmp/deploy/images/sam9x75-curiosity-sd/obmc-phosphor-image-sam9x75-curiosity-sd.update.sd.tar (for firmware update)
+
 Additional details can be found in the [docs](https://github.com/openbmc/docs)
 repository.
 

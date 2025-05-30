@@ -1,7 +1,0 @@
-
-### Shell environment set up for builds. ###
-
-You can now run 'bitbake <target>'
-
-An example target is:
-    obmc-phosphor-image
