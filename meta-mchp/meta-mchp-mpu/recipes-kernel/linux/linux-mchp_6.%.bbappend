@@ -20,6 +20,7 @@ sama7g5ek-optee-sd        = " file://sama7g5ek-linux-optee.cfg \
                               file://sama7g5ek/0001-dts-include-optee-dtsi.patch \
                               file://sama7g5ek/0002-ARM-dts-microchip-at91-sama7g5ek-use-scmi0_clock-ins.patch \
                               "
+SRC_URI:append            = " file://sensors_io_uring.cfg"
 
 KERNEL_MODULE_AUTOLOAD += "atmel_usba_udc g_serial"
 KERNEL_MODULE_AUTOLOAD:append:sama5d27-wlsom1-ek-sd = " wilc-sdio"

@@ -8,6 +8,9 @@ events:
         objs:
           /system:
             xyz.openbmc_project.Inventory.Item: {}
+          /system/chassis/motherboard:
+            xyz.openbmc_project.Inventory.Item: {}
+            xyz.openbmc_project.Inventory.Item.Chassis: {} 
           /system/chassis/motherboard/bmc:
             xyz.openbmc_project.Inventory.Item: {}
             xyz.openbmc_project.Inventory.Item.Bmc: {}

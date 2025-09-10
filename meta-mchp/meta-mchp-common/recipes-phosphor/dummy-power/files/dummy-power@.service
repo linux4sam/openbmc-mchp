@@ -1,0 +1,9 @@
+[Unit]
+Description=Dummy OpenBMC Power Control D-Bus Service
+
+[Service]
+ExecStart=/usr/bin/dummy_power
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

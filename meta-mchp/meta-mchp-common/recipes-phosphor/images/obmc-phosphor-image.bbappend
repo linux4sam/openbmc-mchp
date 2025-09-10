@@ -13,6 +13,10 @@ IMAGE_INSTALL:append = " e2fsprogs-tune2fs"
 # Force inclusion of inventory manager
 IMAGE_INSTALL:append = " phosphor-inventory-manager"
 
+# Remove skeleton-control-power as we are adding dummy-power
+IMAGE_INSTALL:remove = "phosphor-skeleton-control-power"
+
+
 # Add additional packages to the image
 OBMC_IMAGE_EXTRA_INSTALL:append = " entity-manager"
 OBMC_IMAGE_EXTRA_INSTALL:append = " fru-device"
@@ -28,3 +32,5 @@ OBMC_IMAGE_EXTRA_INSTALL:append = " phosphor-led-manager"
 OBMC_IMAGE_EXTRA_INSTALL:append = " obmc-console"
 OBMC_IMAGE_EXTRA_INSTALL:append = " webui-vue"
 OBMC_IMAGE_EXTRA_INSTALL:append = " ipmitool"
+OBMC_IMAGE_EXTRA_INSTALL:append = " dbus-sensors"
+OBMC_IMAGE_EXTRA_INSTALL:append = " dummy-power"

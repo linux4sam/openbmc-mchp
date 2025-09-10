@@ -1,16 +1,10 @@
 {
     "leds": [
-        {
-            "group" : "example",
-            "members" : [
-                {
-                    "Name" : "example",
-                    "Action" : "Blink",
-                    "Priority" : "Blink",
-                    "DutyOn" : 50,
-                    "Period" : 1000
-                }
-            ]
-        }
+        { "group": "bmc_booted", "members": [] },
+        { "group": "power_on", "members": [] },
+        { "group": "system_fault", "members": [] },
+        { "group": "fan0_fault", "members": [] },
+        { "group": "overtemp_fault", "members": [] },
+        { "group": "enclosure_identify", "members": [] }
     ]
 }
