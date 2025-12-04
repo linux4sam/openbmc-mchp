@@ -1,1 +1,0 @@
-inherit mchp-compat-machines
