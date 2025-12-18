@@ -1,21 +1,14 @@
 # Ensure kernel modules are included in the image
-IMAGE_INSTALL:append = " kernel-modules"
+OBMC_IMAGE_EXTRA_INSTALL:append = " kernel-modules"
 
 # Ensure u-boot-mchp package is included in the image
-IMAGE_INSTALL:append = " u-boot-mchp"
-
-# Remove deprecated webui
-IMAGE_INSTALL:remove = "phosphor-webui"
+OBMC_IMAGE_EXTRA_INSTALL:append = " u-boot-mchp"
 
 # Force inclusion of e2fsprogs-tune2fs in the image
-IMAGE_INSTALL:append = " e2fsprogs-tune2fs"
+OBMC_IMAGE_EXTRA_INSTALL:append = " e2fsprogs-tune2fs"
 
 # Force inclusion of inventory manager
-IMAGE_INSTALL:append = " phosphor-inventory-manager"
-
-# Remove skeleton-control-power as we are adding dummy-power
-IMAGE_INSTALL:remove = "phosphor-skeleton-control-power"
-
+OBMC_IMAGE_EXTRA_INSTALL:append = " phosphor-inventory-manager"
 
 # Add additional packages to the image
 OBMC_IMAGE_EXTRA_INSTALL:append = " entity-manager"
@@ -34,3 +27,18 @@ OBMC_IMAGE_EXTRA_INSTALL:append = " webui-vue"
 OBMC_IMAGE_EXTRA_INSTALL:append = " ipmitool"
 OBMC_IMAGE_EXTRA_INSTALL:append = " dbus-sensors"
 OBMC_IMAGE_EXTRA_INSTALL:append = " dummy-power"
+
+# Remove deprecated webui
+IMAGE_INSTALL:remove = "phosphor-webui"
+
+# Remove skeleton-control-power as we are adding dummy-power
+IMAGE_INSTALL:remove = "phosphor-skeleton-control-power"
+
+# Remove skeleton-control-power as we are adding dummy-power
+IMAGE_INSTALL:remove = "phosphor-skeleton-control-power"
+
+# Remove obmc ikvm
+IMAGE_FEATURES:remove = "obmc-ikvm"
+
+# Add root to priv-admin group
+EXTRA_USERS_PARAMS:append = " usermod -a -G priv-admin root;"

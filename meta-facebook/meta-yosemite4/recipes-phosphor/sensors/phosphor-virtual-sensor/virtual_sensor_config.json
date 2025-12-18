@@ -571,10 +571,11 @@
             [
                 "chassis",
                 "all_sensors",
-                "/xyz/openbmc_project/inventory/Item/Board/PLDM_Device_10"
+                "/xyz/openbmc_project/inventory/system/board/SENTINEL_DOME_SLOT_1"
             ]
         ],
         "Threshold": {
+            "HardShutdownHigh": 150,
             "CriticalHigh": 45
         },
         "Params": {
@@ -595,7 +596,7 @@
                 }
             ]
         },
-        "Expression": "MB_FIO_TEMP_10 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))"
+        "Expression": "maxIgnoreNaN((MB_FIO_TEMP_10 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))), 0)"
     },
     {
         "Desc": {
@@ -606,10 +607,11 @@
             [
                 "chassis",
                 "all_sensors",
-                "/xyz/openbmc_project/inventory/Item/Board/PLDM_Device_20"
+                "/xyz/openbmc_project/inventory/system/board/SENTINEL_DOME_SLOT_2"
             ]
         ],
         "Threshold": {
+            "HardShutdownHigh": 150,
             "CriticalHigh": 45
         },
         "Params": {
@@ -630,7 +632,7 @@
                 }
             ]
         },
-        "Expression": "MB_FIO_TEMP_20 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))"
+        "Expression": "maxIgnoreNaN((MB_FIO_TEMP_20 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))), 0)"
     },
     {
         "Desc": {
@@ -641,10 +643,11 @@
             [
                 "chassis",
                 "all_sensors",
-                "/xyz/openbmc_project/inventory/Item/Board/PLDM_Device_30"
+                "/xyz/openbmc_project/inventory/system/board/SENTINEL_DOME_SLOT_3"
             ]
         ],
         "Threshold": {
+            "HardShutdownHigh": 150,
             "CriticalHigh": 45
         },
         "Params": {
@@ -665,7 +668,7 @@
                 }
             ]
         },
-        "Expression": "MB_FIO_TEMP_30 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))"
+        "Expression": "maxIgnoreNaN((MB_FIO_TEMP_30 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))), 0)"
     },
     {
         "Desc": {
@@ -676,10 +679,11 @@
             [
                 "chassis",
                 "all_sensors",
-                "/xyz/openbmc_project/inventory/Item/Board/PLDM_Device_40"
+                "/xyz/openbmc_project/inventory/system/board/SENTINEL_DOME_SLOT_4"
             ]
         ],
         "Threshold": {
+            "HardShutdownHigh": 150,
             "CriticalHigh": 45
         },
         "Params": {
@@ -700,7 +704,7 @@
                 }
             ]
         },
-        "Expression": "MB_FIO_TEMP_40 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))"
+        "Expression": "maxIgnoreNaN((MB_FIO_TEMP_40 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))), 0)"
     },
     {
         "Desc": {
@@ -711,10 +715,11 @@
             [
                 "chassis",
                 "all_sensors",
-                "/xyz/openbmc_project/inventory/Item/Board/PLDM_Device_50"
+                "/xyz/openbmc_project/inventory/system/board/SENTINEL_DOME_SLOT_5"
             ]
         ],
         "Threshold": {
+            "HardShutdownHigh": 150,
             "CriticalHigh": 45
         },
         "Params": {
@@ -735,7 +740,7 @@
                 }
             ]
         },
-        "Expression": "MB_FIO_TEMP_50 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))"
+        "Expression": "maxIgnoreNaN((MB_FIO_TEMP_50 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))), 0)"
     },
     {
         "Desc": {
@@ -746,10 +751,11 @@
             [
                 "chassis",
                 "all_sensors",
-                "/xyz/openbmc_project/inventory/Item/Board/PLDM_Device_60"
+                "/xyz/openbmc_project/inventory/system/board/SENTINEL_DOME_SLOT_6"
             ]
         ],
         "Threshold": {
+            "HardShutdownHigh": 150,
             "CriticalHigh": 45
         },
         "Params": {
@@ -770,7 +776,7 @@
                 }
             ]
         },
-        "Expression": "MB_FIO_TEMP_60 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))"
+        "Expression": "maxIgnoreNaN((MB_FIO_TEMP_60 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))), 0)"
     },
     {
         "Desc": {
@@ -781,10 +787,11 @@
             [
                 "chassis",
                 "all_sensors",
-                "/xyz/openbmc_project/inventory/Item/Board/PLDM_Device_70"
+                "/xyz/openbmc_project/inventory/system/board/SENTINEL_DOME_SLOT_7"
             ]
         ],
         "Threshold": {
+            "HardShutdownHigh": 150,
             "CriticalHigh": 45
         },
         "Params": {
@@ -805,7 +812,7 @@
                 }
             ]
         },
-        "Expression": "MB_FIO_TEMP_70 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))"
+        "Expression": "maxIgnoreNaN((MB_FIO_TEMP_70 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))), 0)"
     },
     {
         "Desc": {
@@ -816,10 +823,11 @@
             [
                 "chassis",
                 "all_sensors",
-                "/xyz/openbmc_project/inventory/Item/Board/PLDM_Device_80"
+                "/xyz/openbmc_project/inventory/system/board/SENTINEL_DOME_SLOT_8"
             ]
         ],
         "Threshold": {
+            "HardShutdownHigh": 150,
             "CriticalHigh": 45
         },
         "Params": {
@@ -840,7 +848,7 @@
                 }
             ]
         },
-        "Expression": "MB_FIO_TEMP_80 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))"
+        "Expression": "maxIgnoreNaN((MB_FIO_TEMP_80 - (Fan_PWM == 100 ? -0.2 : (Fan_PWM >=90 ? -0.1 : (Fan_PWM >=70 ? 0.4 : (Fan_PWM >=50 ? 0.5 : (Fan_PWM >=30 ? 0.6 : 0)))))), 0)"
     },
     {
         "Desc": {
@@ -848,66 +856,9 @@
             "SensorType": "utilization"
         },
         "Params": {
-            "DbusParam": [
-                {
-                    "ParamName": "MB_FIO_TEMP_10",
-                    "Desc": {
-                        "Name": "SENTINEL_DOME_SLOT_1_MB_FIO_TEMP_C",
-                        "SensorType": "temperature"
-                    }
-                },
-                {
-                    "ParamName": "MB_FIO_TEMP_20",
-                    "Desc": {
-                        "Name": "SENTINEL_DOME_SLOT_2_MB_FIO_TEMP_C",
-                        "SensorType": "temperature"
-                    }
-                },
-                {
-                    "ParamName": "MB_FIO_TEMP_30",
-                    "Desc": {
-                        "Name": "SENTINEL_DOME_SLOT_3_MB_FIO_TEMP_C",
-                        "SensorType": "temperature"
-                    }
-                },
-                {
-                    "ParamName": "MB_FIO_TEMP_40",
-                    "Desc": {
-                        "Name": "SENTINEL_DOME_SLOT_4_MB_FIO_TEMP_C",
-                        "SensorType": "temperature"
-                    }
-                },
-                {
-                    "ParamName": "MB_FIO_TEMP_50",
-                    "Desc": {
-                        "Name": "SENTINEL_DOME_SLOT_5_MB_FIO_TEMP_C",
-                        "SensorType": "temperature"
-                    }
-                },
-                {
-                    "ParamName": "MB_FIO_TEMP_60",
-                    "Desc": {
-                        "Name": "SENTINEL_DOME_SLOT_6_MB_FIO_TEMP_C",
-                        "SensorType": "temperature"
-                    }
-                },
-                {
-                    "ParamName": "MB_FIO_TEMP_70",
-                    "Desc": {
-                        "Name": "SENTINEL_DOME_SLOT_7_MB_FIO_TEMP_C",
-                        "SensorType": "temperature"
-                    }
-                },
-                {
-                    "ParamName": "MB_FIO_TEMP_80",
-                    "Desc": {
-                        "Name": "SENTINEL_DOME_SLOT_8_MB_FIO_TEMP_C",
-                        "SensorType": "temperature"
-                    }
-                }
-            ]
+            "DbusParam": []
         },
-        "Expression": "sum(ifNan(MB_FIO_TEMP_10, 0) == 0 ? 0 : 1, ifNan(MB_FIO_TEMP_20, 0) == 0 ? 0 : 1, ifNan(MB_FIO_TEMP_30, 0) == 0 ? 0 : 1, ifNan(MB_FIO_TEMP_40, 0) == 0 ? 0 : 1, ifNan(MB_FIO_TEMP_50, 0) == 0 ? 0 : 1, ifNan(MB_FIO_TEMP_60, 0) == 0 ? 0 : 1, ifNan(MB_FIO_TEMP_70, 0) == 0 ? 0 : 1, ifNan(MB_FIO_TEMP_80, 0) == 0 ? 0 : 1) / 8 * 100"
+        "Expression": "100"
     },
     {
         "Desc": {
@@ -946,7 +897,7 @@
                 }
             ]
         },
-        "Expression": "ifNan((hsc_current1 * 1.012 + 0.05), (hsc_current2 * 0.302 - 0.15))"
+        "Expression": "max(0, ifNan((hsc_current1 * 1.012 + 0.05), (hsc_current2 * 0.302 - 0.15)))"
     },
     {
         "Desc": {
@@ -1024,7 +975,7 @@
                 }
             ]
         },
-        "Expression": "ifNan((hsc_current1 * 1.012 + 0.05), (hsc_current2 * 0.302 - 0.15))"
+        "Expression": "max(0, ifNan((hsc_current1 * 1.012 + 0.05), (hsc_current2 * 0.302 - 0.15)))"
     },
     {
         "Desc": {
@@ -1694,19 +1645,19 @@
             "Name": "SYSTEM_PLATFORM_INPUT_PWR_W",
             "SensorType": "power"
         },
+        "Associations": [
+            [
+                "chassis",
+                "all_sensors",
+                "/xyz/openbmc_project/inventory/system/board/Yosemite_4_Medusa_Board"
+            ]
+        ],
         "Params": {
             "DbusParam": [
                 {
                     "ParamName": "hsc_48V0_power",
                     "Desc": {
                         "Name": "CALIBRATED_MEDUSA_HSC0_48V_INPUT_PWR_W",
-                        "SensorType": "power"
-                    }
-                },
-                {
-                    "ParamName": "hsc_48V1_power",
-                    "Desc": {
-                        "Name": "CALIBRATED_MEDUSA_HSC1_48V_INPUT_PWR_W",
                         "SensorType": "power"
                     }
                 },
@@ -1775,6 +1726,390 @@
                 }
             ]
         },
-        "Expression": "hsc_48V0_power + hsc_48V1_power - hsc_slot1_power - hsc_slot2_power - hsc_slot3_power - hsc_slot4_power - hsc_slot5_power - hsc_slot6_power - hsc_slot7_power - hsc_slot8_power"
+        "Expression": "ifNan(hsc_48V0_power, 0) + ifNan(hsc_48V1_power, 0) - ifNan(hsc_slot1_power, 0) - ifNan(hsc_slot2_power, 0) - ifNan(hsc_slot3_power, 0) - ifNan(hsc_slot4_power, 0) - ifNan(hsc_slot5_power, 0) - ifNan(hsc_slot6_power, 0) - ifNan(hsc_slot7_power, 0) - ifNan(hsc_slot8_power, 0)"
+    },
+    {
+        "Desc": {
+            "Name": "MEDUSA_MB1_HSC_12V_OUTPUT_PWR_W",
+            "SensorType": "power",
+            "MaxValue": "3000",
+            "MinValue": "0"
+        },
+        "Associations": [
+            [
+                "chassis",
+                "all_sensors",
+                "/xyz/openbmc_project/inventory/system/board/Yosemite_4_Medusa_Board"
+            ]
+        ],
+        "Threshold": {
+            "HardShutdownHigh": 1125,
+            "CriticalHigh": 1099.45,
+            "WarningHigh": 1049.47
+        },
+        "Params": {
+            "DbusParam": [
+                {
+                    "ParamName": "hsc_output_curr",
+                    "Desc": {
+                        "Name": "CALIBRATED_MEDUSA_MB1_HSC_12V_CURR_A",
+                        "SensorType": "current"
+                    }
+                },
+                {
+                    "ParamName": "hsc_output_voltage",
+                    "Desc": {
+                        "Name": "MEDUSA_MB1_HSC_12V_OUTPUT_VOLT_V",
+                        "SensorType": "voltage"
+                    }
+                }
+            ]
+        },
+        "Expression": "hsc_output_curr * hsc_output_voltage"
+    },
+    {
+        "Desc": {
+            "Name": "MEDUSA_MB2_HSC_12V_OUTPUT_PWR_W",
+            "SensorType": "power",
+            "MaxValue": "3000",
+            "MinValue": "0"
+        },
+        "Associations": [
+            [
+                "chassis",
+                "all_sensors",
+                "/xyz/openbmc_project/inventory/system/board/Yosemite_4_Medusa_Board"
+            ]
+        ],
+        "Threshold": {
+            "HardShutdownHigh": 1125,
+            "CriticalHigh": 1099.45,
+            "WarningHigh": 1049.47
+        },
+        "Params": {
+            "DbusParam": [
+                {
+                    "ParamName": "hsc_output_curr",
+                    "Desc": {
+                        "Name": "CALIBRATED_MEDUSA_MB2_HSC_12V_CURR_A",
+                        "SensorType": "current"
+                    }
+                },
+                {
+                    "ParamName": "hsc_output_voltage",
+                    "Desc": {
+                        "Name": "MEDUSA_MB2_HSC_12V_OUTPUT_VOLT_V",
+                        "SensorType": "voltage"
+                    }
+                }
+            ]
+        },
+        "Expression": "hsc_output_curr * hsc_output_voltage"
+    },
+    {
+        "Desc": {
+            "Name": "MEDUSA_MB3_HSC_12V_OUTPUT_PWR_W",
+            "SensorType": "power",
+            "MaxValue": "3000",
+            "MinValue": "0"
+        },
+        "Associations": [
+            [
+                "chassis",
+                "all_sensors",
+                "/xyz/openbmc_project/inventory/system/board/Yosemite_4_Medusa_Board"
+            ]
+        ],
+        "Threshold": {
+            "HardShutdownHigh": 1125,
+            "CriticalHigh": 1099.45,
+            "WarningHigh": 1049.47
+        },
+        "Params": {
+            "DbusParam": [
+                {
+                    "ParamName": "hsc_output_curr",
+                    "Desc": {
+                        "Name": "CALIBRATED_MEDUSA_MB3_HSC_12V_CURR_A",
+                        "SensorType": "current"
+                    }
+                },
+                {
+                    "ParamName": "hsc_output_voltage",
+                    "Desc": {
+                        "Name": "MEDUSA_MB3_HSC_12V_OUTPUT_VOLT_V",
+                        "SensorType": "voltage"
+                    }
+                }
+            ]
+        },
+        "Expression": "hsc_output_curr * hsc_output_voltage"
+    },
+    {
+        "Desc": {
+            "Name": "MEDUSA_MB4_HSC_12V_OUTPUT_PWR_W",
+            "SensorType": "power",
+            "MaxValue": "3000",
+            "MinValue": "0"
+        },
+        "Associations": [
+            [
+                "chassis",
+                "all_sensors",
+                "/xyz/openbmc_project/inventory/system/board/Yosemite_4_Medusa_Board"
+            ]
+        ],
+        "Threshold": {
+            "HardShutdownHigh": 1125,
+            "CriticalHigh": 1099.45,
+            "WarningHigh": 1049.47
+        },
+        "Params": {
+            "DbusParam": [
+                {
+                    "ParamName": "hsc_output_curr",
+                    "Desc": {
+                        "Name": "CALIBRATED_MEDUSA_MB4_HSC_12V_CURR_A",
+                        "SensorType": "current"
+                    }
+                },
+                {
+                    "ParamName": "hsc_output_voltage",
+                    "Desc": {
+                        "Name": "MEDUSA_MB4_HSC_12V_OUTPUT_VOLT_V",
+                        "SensorType": "voltage"
+                    }
+                }
+            ]
+        },
+        "Expression": "hsc_output_curr * hsc_output_voltage"
+    },
+    {
+        "Desc": {
+            "Name": "MEDUSA_MB5_HSC_12V_OUTPUT_PWR_W",
+            "SensorType": "power",
+            "MaxValue": "3000",
+            "MinValue": "0"
+        },
+        "Associations": [
+            [
+                "chassis",
+                "all_sensors",
+                "/xyz/openbmc_project/inventory/system/board/Yosemite_4_Medusa_Board"
+            ]
+        ],
+        "Threshold": {
+            "HardShutdownHigh": 1125,
+            "CriticalHigh": 1099.45,
+            "WarningHigh": 1049.47
+        },
+        "Params": {
+            "DbusParam": [
+                {
+                    "ParamName": "hsc_output_curr",
+                    "Desc": {
+                        "Name": "CALIBRATED_MEDUSA_MB5_HSC_12V_CURR_A",
+                        "SensorType": "current"
+                    }
+                },
+                {
+                    "ParamName": "hsc_output_voltage",
+                    "Desc": {
+                        "Name": "MEDUSA_MB5_HSC_12V_OUTPUT_VOLT_V",
+                        "SensorType": "voltage"
+                    }
+                }
+            ]
+        },
+        "Expression": "hsc_output_curr * hsc_output_voltage"
+    },
+    {
+        "Desc": {
+            "Name": "MEDUSA_MB6_HSC_12V_OUTPUT_PWR_W",
+            "SensorType": "power",
+            "MaxValue": "3000",
+            "MinValue": "0"
+        },
+        "Associations": [
+            [
+                "chassis",
+                "all_sensors",
+                "/xyz/openbmc_project/inventory/system/board/Yosemite_4_Medusa_Board"
+            ]
+        ],
+        "Threshold": {
+            "HardShutdownHigh": 1125,
+            "CriticalHigh": 1099.45,
+            "WarningHigh": 1049.47
+        },
+        "Params": {
+            "DbusParam": [
+                {
+                    "ParamName": "hsc_output_curr",
+                    "Desc": {
+                        "Name": "CALIBRATED_MEDUSA_MB6_HSC_12V_CURR_A",
+                        "SensorType": "current"
+                    }
+                },
+                {
+                    "ParamName": "hsc_output_voltage",
+                    "Desc": {
+                        "Name": "MEDUSA_MB6_HSC_12V_OUTPUT_VOLT_V",
+                        "SensorType": "voltage"
+                    }
+                }
+            ]
+        },
+        "Expression": "hsc_output_curr * hsc_output_voltage"
+    },
+    {
+        "Desc": {
+            "Name": "MEDUSA_MB7_HSC_12V_OUTPUT_PWR_W",
+            "SensorType": "power",
+            "MaxValue": "3000",
+            "MinValue": "0"
+        },
+        "Associations": [
+            [
+                "chassis",
+                "all_sensors",
+                "/xyz/openbmc_project/inventory/system/board/Yosemite_4_Medusa_Board"
+            ]
+        ],
+        "Threshold": {
+            "HardShutdownHigh": 1125,
+            "CriticalHigh": 1099.45,
+            "WarningHigh": 1049.47
+        },
+        "Params": {
+            "DbusParam": [
+                {
+                    "ParamName": "hsc_output_curr",
+                    "Desc": {
+                        "Name": "CALIBRATED_MEDUSA_MB7_HSC_12V_CURR_A",
+                        "SensorType": "current"
+                    }
+                },
+                {
+                    "ParamName": "hsc_output_voltage",
+                    "Desc": {
+                        "Name": "MEDUSA_MB7_HSC_12V_OUTPUT_VOLT_V",
+                        "SensorType": "voltage"
+                    }
+                }
+            ]
+        },
+        "Expression": "hsc_output_curr * hsc_output_voltage"
+    },
+    {
+        "Desc": {
+            "Name": "MEDUSA_MB8_HSC_12V_OUTPUT_PWR_W",
+            "SensorType": "power",
+            "MaxValue": "3000",
+            "MinValue": "0"
+        },
+        "Associations": [
+            [
+                "chassis",
+                "all_sensors",
+                "/xyz/openbmc_project/inventory/system/board/Yosemite_4_Medusa_Board"
+            ]
+        ],
+        "Threshold": {
+            "HardShutdownHigh": 1125,
+            "CriticalHigh": 1099.45,
+            "WarningHigh": 1049.47
+        },
+        "Params": {
+            "DbusParam": [
+                {
+                    "ParamName": "hsc_output_curr",
+                    "Desc": {
+                        "Name": "CALIBRATED_MEDUSA_MB8_HSC_12V_CURR_A",
+                        "SensorType": "current"
+                    }
+                },
+                {
+                    "ParamName": "hsc_output_voltage",
+                    "Desc": {
+                        "Name": "MEDUSA_MB8_HSC_12V_OUTPUT_VOLT_V",
+                        "SensorType": "voltage"
+                    }
+                }
+            ]
+        },
+        "Expression": "hsc_output_curr * hsc_output_voltage"
+    },
+    {
+        "Desc": {
+          "Name": "VIRTUAL_NIC0_TEMP_C",
+          "SensorType": "temperature"
+        },
+        "Params": {
+          "DbusParam": [
+            {
+              "ParamName": "NIC_TEMP_C",
+              "Desc": {
+                "Name": "NIC0_TEMP_C",
+                "SensorType": "temperature"
+              }
+            }
+          ]
+        },
+        "Expression": "NIC_TEMP_C == NIC_TEMP_C ? NIC_TEMP_C : 0"
+    },
+    {
+        "Desc": {
+          "Name": "VIRTUAL_NIC1_TEMP_C",
+          "SensorType": "temperature"
+        },
+        "Params": {
+          "DbusParam": [
+            {
+              "ParamName": "NIC_TEMP_C",
+              "Desc": {
+                "Name": "NIC1_TEMP_C",
+                "SensorType": "temperature"
+              }
+            }
+          ]
+        },
+        "Expression": "NIC_TEMP_C == NIC_TEMP_C ? NIC_TEMP_C : 0"
+    },
+    {
+        "Desc": {
+          "Name": "VIRTUAL_NIC2_TEMP_C",
+          "SensorType": "temperature"
+        },
+        "Params": {
+          "DbusParam": [
+            {
+              "ParamName": "NIC_TEMP_C",
+              "Desc": {
+                "Name": "NIC2_TEMP_C",
+                "SensorType": "temperature"
+              }
+            }
+          ]
+        },
+        "Expression": "NIC_TEMP_C == NIC_TEMP_C ? NIC_TEMP_C : 0"
+    },
+    {
+        "Desc": {
+          "Name": "VIRTUAL_NIC3_TEMP_C",
+          "SensorType": "temperature"
+        },
+        "Params": {
+          "DbusParam": [
+            {
+              "ParamName": "NIC_TEMP_C",
+              "Desc": {
+                "Name": "NIC3_TEMP_C",
+                "SensorType": "temperature"
+              }
+            }
+          ]
+        },
+        "Expression": "NIC_TEMP_C == NIC_TEMP_C ? NIC_TEMP_C : 0"
     }
 ]

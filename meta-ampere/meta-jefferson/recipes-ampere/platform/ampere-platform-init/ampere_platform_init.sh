@@ -43,10 +43,7 @@ function fan_controller_init() {
     echo 8-005c > /sys/bus/i2c/drivers/adt7462/bind
 
     echo "Set default FAN speed to 60%"
-    for filename in /sys/class/hwmon/*/pwm[0-9]
-    do
-        echo 153 > "$filename"
-    done
+    /usr/sbin/ampere_fanctrl.sh setspeed force all 60
 }
 
 # Setting default value for device sel and mux
@@ -80,6 +77,7 @@ gpioset $(gpiofind uart1-mode0)=0          # Set UART Mux to BMC
 gpioset $(gpiofind uart2-mode0)=0
 gpioset $(gpiofind uart1-mode1)=1
 gpioset $(gpiofind uart2-mode1)=1
+gpioset $(gpiofind s01-uart1-sel)=1        # Select Mpro0 as defaut
 
 # When BMC is rebooted, because PSON_L has pull up to P3V3_STB, it changes its
 # value to HIGH. Add code to check P3V3_STB and recover PSON_L to correct state

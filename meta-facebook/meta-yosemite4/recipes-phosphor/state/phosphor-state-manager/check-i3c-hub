@@ -25,11 +25,11 @@ check_i3c_hub_status()
 
     if [ "$target_slot" -lt 5 ]; then
         hub_path="/sys/kernel/debug/i3c-hub-0-*/reg"
-        i3c_hub_lock="/tmp/i3c-hub0.lock"
+        i3c_hub_lock="/run/i3c-hub0.lock"
         echo "Slot$target_slot on i3c hub 0."
     else
         hub_path="/sys/kernel/debug/i3c-hub-1-*/reg"
-        i3c_hub_lock="/tmp/i3c-hub1.lock"
+        i3c_hub_lock="/run/i3c-hub1.lock"
         echo "Slot$target_slot on i3c hub 1."
     fi
 
@@ -52,25 +52,33 @@ check_i3c_hub_status()
         current_port=$(cat "$access_file")
         if [ "$target_slot" -gt 4 ]; then
             ((slot=target_slot-4))
+        else
+            slot=$target_slot
         fi
 
         check_bit=$(( (current_port >> (--slot)) & 1 ))
         if [ $check_bit -eq 0 ]; then
             if [ "$option" = "on" ]; then
                 echo "Enable slot${target_slot} i3c port."
-                mask=$((mask << (--slot)))
+                mask=$((mask << slot))
                 current_port=$((current_port | mask))
                 echo $current_port > "$access_file"
                 cat "$access_file"
+
+                echo 81 > "$offset_file"
+                echo $current_port > "$access_file"
             fi
         else
             if [ "$option" = "off" ]; then
                 echo "Disable slot${target_slot} i3c port."
-                mask=$((mask << (--slot)))
+                mask=$((mask << slot))
                 mask=$((~mask))
                 current_port=$((current_port & mask))
                 echo $current_port > "$access_file"
                 cat "$access_file"
+
+                echo 81 > "$offset_file"
+                echo $current_port > "$access_file"
             fi
         fi
         echo "Lock i3c hub register."

@@ -1,8 +1,19 @@
-diff --git a/obmc-flash-bmc b/obmc-flash-bmc
-index 442bb7a..8146f49 100644
---- a/obmc-flash-bmc
-+++ b/obmc-flash-bmc
-@@ -518,9 +518,9 @@ function mmc_get_primary_label() {
+From 51763ee866daebc08360289856890caefe6cbdab Mon Sep 17 00:00:00 2001
+From: Francisco Mateo <franciscoantonio.mateo@microchip.com>
+Date: Fri, 5 Dec 2025 17:02:21 +0100
+Subject: [PATCH] obmc-flash-bmc: mchp by label
+
+Upstream-Status: Inappropriate [platform-specific customization]
+Signed-off-by: Francisco Mateo <franciscoantonio.mateo@microchip.com>
+---
+ bmc/obmc-flash-bmc | 269 +++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 260 insertions(+), 9 deletions(-)
+
+diff --git a/bmc/obmc-flash-bmc b/bmc/obmc-flash-bmc
+index f9cc4e2..dd6d2f1 100644
+--- a/bmc/obmc-flash-bmc
++++ b/bmc/obmc-flash-bmc
+@@ -531,9 +531,9 @@ function mmc_get_primary_label() {
      root="${root%${rootmatch}*}"
  
      # Find the device label
@@ -14,7 +25,7 @@ index 442bb7a..8146f49 100644
          echo "b"
      else
          echo ""
-@@ -549,7 +549,7 @@ function mmc_mount() {
+@@ -562,7 +562,7 @@ function mmc_mount() {
  
      # Check the alternate version, remove it if it's corrupted. This can occur
      # when the BMC is rebooted in the middle of a code update for example.
@@ -23,7 +34,7 @@ index 442bb7a..8146f49 100644
          flashid="${secondaryId}"
          mmc_remove
      fi
-@@ -622,8 +622,8 @@ function mmc_remove() {
+@@ -635,8 +635,8 @@ function mmc_remove() {
      if [[ "${flashid}" == "${primaryid}" ]]; then
          return 1
      fi
@@ -34,7 +45,7 @@ index 442bb7a..8146f49 100644
  }
  
  # Set the requested version as primary for the BMC to boot from upon reboot.
-@@ -632,6 +632,245 @@ function mmc_setprimary() {
+@@ -645,6 +645,245 @@ function mmc_setprimary() {
      fw_setenv bootside "${flashid}"
  }
  
@@ -280,7 +291,7 @@ index 442bb7a..8146f49 100644
  function mmc_mirroruboot() {
      # Get current boot device; 0-primary_bootdev device; 1 - alt_bootdev
      bootdev=$(cat /sys/kernel/debug/aspeed/sbc/abr_image)
-@@ -659,6 +898,8 @@ function mmc_mirroruboot() {
+@@ -672,6 +911,8 @@ function mmc_mirroruboot() {
      fi
  }
  
@@ -289,7 +300,7 @@ index 442bb7a..8146f49 100644
  case "$1" in
      mtduboot)
          reqmtd="$2"
-@@ -725,22 +966,31 @@ case "$1" in
+@@ -738,22 +979,31 @@ case "$1" in
      mmc)
          version="$2"
          imgpath="$3"
@@ -325,8 +336,11 @@ index 442bb7a..8146f49 100644
          ;;
      static-altfs)
          mount_static_alt "$2" "$3" "$4"
-@@ -753,3 +1003,4 @@ case "$1" in
+@@ -766,3 +1016,4 @@ case "$1" in
          exit 1
          ;;
  esac
 +
+-- 
+2.34.1
+

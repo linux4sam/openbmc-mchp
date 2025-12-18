@@ -7,7 +7,7 @@ SRC_URI:append = " file://bootm-len.cfg"
 inherit mchp-compat-machines
 
 do_configure:append() {
-    cat ${WORKDIR}/bootm-len.cfg >> ${S}/configs/${UBOOT_MACHINE}
+    cat ${UNPACKDIR}/bootm-len.cfg >> ${S}/configs/${UBOOT_MACHINE}
 }
 
 PROVIDES += "u-boot"

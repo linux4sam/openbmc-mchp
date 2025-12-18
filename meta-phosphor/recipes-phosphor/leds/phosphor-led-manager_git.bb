@@ -59,14 +59,16 @@ do_compile:prepend() {
         cp "${LED_YAML_PATH}/led.yaml" "${S}/led.yaml"
     elif [ -f "${STAGING_DATADIR_NATIVE}/${PN}/led.yaml" ]; then
         cp "${STAGING_DATADIR_NATIVE}/${PN}/led.yaml" "${S}/led.yaml"
-    elif [ -f "${WORKDIR}/led.yaml" ]; then
-        cp "${WORKDIR}/led.yaml" "${S}/led.yaml"
+    elif [ -f "${UNPACKDIR}/led.yaml" ]; then
+        cp "${UNPACKDIR}/led.yaml" "${S}/led.yaml"
     fi
 }
 
 RDEPENDS:${PN} += "bash"
 
-FILES:${PN}-faultmonitor += "${bindir}/phosphor-fru-fault-monitor"
+FILES:${PN} += "${datadir}/dbus-1/system.d"
+FILES:${PN}-faultmonitor += "${libexecdir}/phosphor-fru-fault-monitor"
+FILES:${PN}-faultmonitor += "${systemd_unitdir}/system/obmc-fru-fault-monitor.service"
 
 require ${PN}.inc
 

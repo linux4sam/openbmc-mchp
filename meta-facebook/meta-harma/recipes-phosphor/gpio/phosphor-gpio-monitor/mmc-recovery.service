@@ -1,0 +1,8 @@
+[Unit]
+Description=mmc recovery
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/mctp/setup-devices-eid
+
+SyslogIdentifier=mmc-recovery

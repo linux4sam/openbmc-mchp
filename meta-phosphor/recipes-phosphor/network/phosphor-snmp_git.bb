@@ -8,7 +8,7 @@ DEPENDS += "sdbusplus ${PYTHON_PN}-sdbus++-native"
 DEPENDS += "phosphor-dbus-interfaces"
 DEPENDS += "phosphor-logging"
 DEPENDS += "net-snmp"
-SRCREV = "2d72883adfffc6a01c6c110818ec8d779e1ed4cb"
+SRCREV = "2b27b9618a5f6d1c5f27e696c8fdf9d592963917"
 PV = "0.1+git${SRCPV}"
 PR = "r1"
 

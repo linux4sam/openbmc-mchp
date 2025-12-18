@@ -19,12 +19,12 @@ do_deploy:append:pic64gx () {
                 -e "s/@@AMP_DEMO@@/null/g" \
                 -e "s/@@AMP_PAYLOAD@@/null/g" \
                 -e "s/@@AMP_SKIP-AUTOBOOT@@/true/g" \
-                ${WORKDIR}/${HSS_PAYLOAD}.yaml.in > ${WORKDIR}/${HSS_PAYLOAD}.yaml
+                ${UNPACKDIR}/${HSS_PAYLOAD}.yaml.in > ${UNPACKDIR}/${HSS_PAYLOAD}.yaml
         else
-            cp -f ${WORKDIR}/${HSS_PAYLOAD}.yaml.in ${WORKDIR}/${HSS_PAYLOAD}.yaml
+            cp -f ${UNPACKDIR}/${HSS_PAYLOAD}.yaml.in ${UNPACKDIR}/${HSS_PAYLOAD}.yaml
         fi
 
-        hss-payload-generator -c ${WORKDIR}/${HSS_PAYLOAD}.yaml -v ${DEPLOYDIR}/payload.bin
+        hss-payload-generator -c ${UNPACKDIR}/${HSS_PAYLOAD}.yaml -v ${DEPLOYDIR}/payload.bin
     fi
 
 }

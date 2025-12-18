@@ -9,10 +9,8 @@ inherit phosphor-inventory-manager
 
 SRC_URI = "file://basic-inventory.yaml"
 
-S = "${WORKDIR}"
-
 do_install() {
-    install -D basic-inventory.yaml ${D}${base_datadir}/events.d/basic-inventory.yaml
+    install -D ${UNPACKDIR}/basic-inventory.yaml ${D}${base_datadir}/events.d/basic-inventory.yaml
 }
 
 FILES:${PN} += "${base_datadir}/events.d/basic-inventory.yaml"

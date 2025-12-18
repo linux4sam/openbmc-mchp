@@ -8,7 +8,7 @@ SRC_URI:append = " file://0001-obmc-flash-bmc-mchp-by-label.patch"
 # - The build will always use this specific git commit, regardless of changes upstream.
 # - If the SRCREV in the base recipe or .inc file changes and synchronization with upstream is desired,
 #   both this SRCREV and the patch must be updated to match the new source version.
-SRCREV = "b7df12ccaaebb649e02a767212adccf2d38120c5"
+SRCREV = "4582afdbce795d464ec5757995aa831891a8f49c"
 
 # Add e2fsprogs to the build to include tune2fs
 DEPENDS += "e2fsprogs"

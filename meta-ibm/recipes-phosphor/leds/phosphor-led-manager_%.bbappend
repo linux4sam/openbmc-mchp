@@ -3,7 +3,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 SYSTEMD_SERVICE:${PN}:append:p10bmc = " obmc-led-create-virtual-leds@.service"
 
 # Copies config file having arguments for led-set-all-groups-asserted.sh
-SYSTEMD_ENVIRONMENT_FILE:${PN}:append:p10bmc =" obmc/led/set-all/groups/config"
+SYSTEMD_ENVIRONMENT_FILE:${PN}:append:p10bmc = " obmc/led/set-all/groups/config"
 
 # Use the JSON configuration file at runtime than the static led.yaml
 # Also, enable Lamp Test and OperationalStatus monitor feature for
@@ -40,5 +40,5 @@ pkg_prerm:${PN}:p10bmc () {
 # Install lamp test override json
 do_install:append:p10bmc() {
     install -d ${D}${datadir}/${BPN}/
-    install -m 0644 ${WORKDIR}/lamp-test-led-overrides.json ${D}${datadir}/${BPN}/
+    install -m 0644 ${UNPACKDIR}/lamp-test-led-overrides.json ${D}${datadir}/${BPN}/
 }

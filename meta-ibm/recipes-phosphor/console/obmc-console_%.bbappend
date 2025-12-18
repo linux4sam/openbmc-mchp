@@ -20,11 +20,11 @@ install_concurrent_console_config() {
         ln -sr ${D}/dev/null ${D}${sysconfdir}/${BPN}/client.2200.conf
 
         # We need to populate console-id for remaining consoles
-        install -m 0644 ${WORKDIR}/client.2201.conf ${D}${sysconfdir}/${BPN}/
+        install -m 0644 ${UNPACKDIR}/client.2201.conf ${D}${sysconfdir}/${BPN}/
 
         # Install configuration for remaining servers - the base recipe
         # installs the configuration for the first.
-        install -m 0644 ${WORKDIR}/server.ttyVUART1.conf ${D}${sysconfdir}/${BPN}/
+        install -m 0644 ${UNPACKDIR}/server.ttyVUART1.conf ${D}${sysconfdir}/${BPN}/
 }
 
 SRC_URI:append:p10bmc = " file://client.2201.conf"
@@ -42,24 +42,6 @@ FILES:${PN}:remove:p10bmc = "${systemd_system_unitdir}/obmc-console-ssh@.service
 PACKAGECONFIG:append:p10bmc = " concurrent-servers"
 
 do_install:append:p10bmc() {
-        install_concurrent_console_config
-}
-
-SRC_URI:append:witherspoon-tacoma = " file://client.2201.conf"
-SRC_URI:append:witherspoon-tacoma = " file://server.ttyVUART1.conf"
-
-REGISTERED_SERVICES:${PN}:append:witherspoon-tacoma = " obmc_console_hypervisor:tcp:2201:"
-
-SYSTEMD_SERVICE:${PN}:append:witherspoon-tacoma = " obmc-console-ssh@2200.service \
-		obmc-console-ssh@2201.service \
-                "
-SYSTEMD_SERVICE:${PN}:remove:witherspoon-tacoma = "obmc-console-ssh.socket"
-
-FILES:${PN}:remove:witherspoon-tacoma = "${systemd_system_unitdir}/obmc-console-ssh@.service.d/use-socket.conf"
-
-EXTRA_OECONF:append:witherspoon-tacoma = " --enable-concurrent-servers"
-
-do_install:append:witherspoon-tacoma() {
         install_concurrent_console_config
 }
 

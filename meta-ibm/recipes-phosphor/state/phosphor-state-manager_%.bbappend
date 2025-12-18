@@ -1,6 +1,9 @@
 # Witherspoon system does not support warm reboots
 PACKAGECONFIG:append:witherspoon = " no-warm-reboot"
 
+# System1 does not support warm reboots
+PACKAGECONFIG:append:system1 = " no-warm-reboot"
+
 # p10bmc system do not support forced warm reboots
 PACKAGECONFIG:append:p10bmc = " no-force-warm-reboot"
 
@@ -35,6 +38,6 @@ FILES:${PN}-bmc:append = " ${sysconfdir}/phosphor-service-monitor-default.json"
 SRC_URI:append = " file://phosphor-service-monitor-default.json"
 do_install:append() {
     install -d ${D}${sysconfdir}/phosphor-systemd-target-monitor
-    install -m 0644 ${WORKDIR}/phosphor-service-monitor-default.json \
+    install -m 0644 ${UNPACKDIR}/phosphor-service-monitor-default.json \
         ${D}${sysconfdir}/phosphor-systemd-target-monitor/
 }

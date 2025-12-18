@@ -9,5 +9,5 @@ FILES:${PN} += " \
 "
 
 do_install:append () {
-    install -D -m0644 ${WORKDIR}/99-custom-journald.conf ${D}${sysconfdir}/systemd/journald.conf.d/99-custom-journald.conf
+    install -D -m0644 ${UNPACKDIR}/99-custom-journald.conf ${D}${sysconfdir}/systemd/journald.conf.d/99-custom-journald.conf
 }

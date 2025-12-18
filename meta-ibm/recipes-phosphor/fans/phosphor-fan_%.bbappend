@@ -52,12 +52,10 @@ PACKAGECONFIG:append:witherspoon = " json"
 EXTRA_OEMESON:append:witherspoon = " -Djson-control=disabled"
 
 PACKAGECONFIG:append:p10bmc = " json sensor-monitor"
+PACKAGECONFIG:append:sbp1 = " json sensor-monitor"
+EXTRA_OEMESON:append:sbp1 = " -Duse-host-power-state=enabled"
 
 # Set the appropriate i2c address used within the overridden phosphor-fan-control@.service
-# file that's used for witherspoon type(including witherspoon-tacoma) machines
+# file that's used for witherspoon type machines
 SYSTEMD_SUBSTITUTIONS:witherspoon = "ADDR:100:phosphor-fan-control@.service"
-SYSTEMD_SUBSTITUTIONS:witherspoon-tacoma = "ADDR:200:phosphor-fan-control@.service"
 
-# Set the PKG_DEFAULT_MACHINE name to "witherspoon" for tacoma so witherspoon's
-# JSON config files are installed on tacoma machines (since they use the same ones)
-PKG_DEFAULT_MACHINE:witherspoon-tacoma = "witherspoon"

@@ -46,3 +46,5 @@ WKS_FILE_DEPENDS ?= " \
     bmaptool-native \
     u-boot-mchp \
 "
+
+SERIAL_CONSOLES ?= "115200;ttyS1"
