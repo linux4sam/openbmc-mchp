@@ -246,6 +246,14 @@ INHERIT += "rm_work"
 #Include build information in the image generated
 INHERIT += "image-buildinfo"
 
+
+# Set additional user configuration
+IMAGE_CLASSES += "extrausers"
+# Set the root password to expire on first login
+EXTRA_USERS_PARAMS = "\
+    passwd-expire root; \
+    "
+
 #Do not enable the MCHP features for OpenBMC
 MCHP_FEATURES = "mchpcore mchp-strip-systemd"
 

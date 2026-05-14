@@ -21,7 +21,6 @@ PREFERRED_VERSION_openocd-native = "riscv"
 PREFERRED_VERSION_openocd = "riscv"
 PREFERRED_PROVIDER_virtual/bootloader = "u-boot-mchp"
 PREFERRED_PROVIDER_u-boot = "u-boot-mchp"
-PREFERRED_VERSION_libgpiod = "1.6.4"
 
 PREFERRED_VERSION_u-boot-mchp = "v2025.07%"
 
@@ -46,5 +45,11 @@ WKS_FILE_DEPENDS ?= " \
     bmaptool-native \
     u-boot-mchp \
 "
+
+# PI64GX has OpenSBI built into the HSS. Mask the OpenSBI
+# recipe as it is not used and causes machine signature issues
+# when running yocto-check-layer if RISCV_SBI_PAYLOAD and other
+# related variables are not defined.
+BBMASK += "opensbi"
 
 SERIAL_CONSOLES ?= "115200;ttyS1"

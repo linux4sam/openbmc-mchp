@@ -1,6 +1,3 @@
-setenv fdt_high 0xffffffffffffffff
-setenv initrd_high 0xffffffffffffffff
-
 load mmc 0:${distro_bootpart} ${scriptaddr} fitImage
 bootm start ${scriptaddr};
 bootm loados ${scriptaddr};

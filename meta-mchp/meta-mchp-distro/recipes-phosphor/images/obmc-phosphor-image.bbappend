@@ -40,5 +40,18 @@ IMAGE_INSTALL:remove = "phosphor-skeleton-control-power"
 # Remove obmc ikvm
 IMAGE_FEATURES:remove = "obmc-ikvm"
 
+# Allow root to start with an empty, expired password so first boot can set it.
+# Without this feature, poky's rootfs postcommands lock empty root passwords.
+IMAGE_FEATURES:append = " empty-root-password"
+
+# Replace the upstream default root password ('0penBmc') with an empty one.
+# The passwd-expire line below keeps the first-boot password change enforced.
+EXTRA_USERS_PARAMS:pn-obmc-phosphor-image = " usermod -p '' root;"
+
 # Add root to priv-admin group
 EXTRA_USERS_PARAMS:append = " usermod -a -G priv-admin root;"
+
+# Force root password to expire on first login. The same setting is kept in
+# Microchip local.conf templates for Yocto-layer commonality; keep it here too
+# so OpenBMC release images enforce this regardless of the build template used.
+EXTRA_USERS_PARAMS:append = " passwd-expire root;"

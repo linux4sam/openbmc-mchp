@@ -231,6 +231,13 @@ PACKAGECONFIG:append:pn-qemu-system-native = " sdl"
 #BB_HASHSERVE = "auto"
 #BB_SIGNATURE_HANDLER = "OEEquivHash"
 
+# Set additional user configuration
+IMAGE_CLASSES += "extrausers"
+# Set the root password to expire on first login
+EXTRA_USERS_PARAMS = "\
+    passwd-expire root; \
+    "
+
 #
 # Memory Resident Bitbake
 #
@@ -276,15 +283,14 @@ INIT_MANAGER = "systemd"
 VIRTUAL-RUNTIME_syslog = ""
 
 DISTRO ?= "openbmc-phosphor"
-MCHP_FEATURES= ""
+MCHP_FEATURES= "mchpcore mchp-autoresize"
 DISTRO_FEATURES:remove ?= "x11 3g nfc pulseaudio"
 
-MCHP_RELEASE_VERSION="v2025.10"
+MCHP_RELEASE_VERSION="v2026.04"
 MCHP_RELEASE_URL="https://github.com/pic64gx/"
 
-#PACKAGECONFIG:append:pn-openssl = " cryptodev-linux"
 PACKAGECONFIG:remove:pn-rng-tools = " libjitterentropy"
-PACKAGECONFIG:append:pn-libkcapi = " testapp"
+PACKAGECONFIG:append:pn-libkcapi = " testapp apps"
 
 SANITY_TESTED_DISTROS:append ?= " *"
 

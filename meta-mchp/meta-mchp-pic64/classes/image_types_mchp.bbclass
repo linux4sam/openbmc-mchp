@@ -34,7 +34,7 @@ do_generate_mchp_sd_boot_partition() {
         mcopy -i ${BOOTIMG} "$src" ::/
     done
 
-    zstd -f -k -T0 -c ${ZSTD_COMPRESSION_LEVEL} ${BOOTIMG} > image-kernel
+    zstd -f -k -T0 -c -${ZSTD_COMPRESSION_LEVEL} ${BOOTIMG} > image-kernel
 }
 do_generate_mchp_sd_boot_partition[dirs] = " ${S}/ext4"
 do_generate_mchp_sd_boot_partition[depends] += "dosfstools-native:do_populate_sysroot mtools-native:do_populate_sysroot zstd-native:do_populate_sysroot u-boot:do_deploy virtual/kernel:do_deploy"
@@ -113,7 +113,7 @@ do_generate_mchp_sd_rofs_partition() {
 
     # Compress the new image
     bbnote "Compressing the cleaned ext4 image using zstd..."
-    zstd -f -k -T0 -c ${ZSTD_COMPRESSION_LEVEL} "${NEW_IMAGE_PATH}" > ${IMAGE_LINK_NAME}.${FLASH_EXT4_BASETYPE}.zst
+    zstd -f -k -T0 -c -${ZSTD_COMPRESSION_LEVEL} "${NEW_IMAGE_PATH}" > ${IMAGE_LINK_NAME}.${FLASH_EXT4_BASETYPE}.zst
 
     # Create a symbolic link to the compressed image
     ln -sf ${IMAGE_LINK_NAME}.${FLASH_EXT4_BASETYPE}.zst image-rofs
@@ -200,7 +200,7 @@ do_generate_mchp_sd_rwfs_partition() {
 
     # Compress the new image
     bbnote "Compressing the cleaned ext4 rwfs image using zstd..."
-    zstd -c -T0 -c ${ZSTD_COMPRESSION_LEVEL} "${NEW_IMAGE_PATH}" > "${IMAGE_LINK_NAME}.rwfs.${FLASH_EXT4_OVERLAY_BASETYPE}.zst"
+    zstd -c -T0 -c -${ZSTD_COMPRESSION_LEVEL} "${NEW_IMAGE_PATH}" > "${IMAGE_LINK_NAME}.rwfs.${FLASH_EXT4_OVERLAY_BASETYPE}.zst"
 
     # Create a symbolic link to the compressed image
     ln -sf "${IMAGE_LINK_NAME}.rwfs.${FLASH_EXT4_OVERLAY_BASETYPE}.zst" image-rwfs
