@@ -1,0 +1,10 @@
+{
+    "leds": [
+        { "group": "bmc_booted", "members": [] },
+        { "group": "power_on", "members": [] },
+        { "group": "system_fault", "members": [] },
+        { "group": "fan0_fault", "members": [] },
+        { "group": "overtemp_fault", "members": [] },
+        { "group": "enclosure_identify", "members": [] }
+    ]
+}

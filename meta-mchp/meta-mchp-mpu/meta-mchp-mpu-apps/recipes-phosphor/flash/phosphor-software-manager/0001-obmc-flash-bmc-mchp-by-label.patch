@@ -1,0 +1,332 @@
+diff --git a/obmc-flash-bmc b/obmc-flash-bmc
+index 442bb7a..8146f49 100644
+--- a/obmc-flash-bmc
++++ b/obmc-flash-bmc
+@@ -518,9 +518,9 @@ function mmc_get_primary_label() {
+     root="${root%${rootmatch}*}"
+ 
+     # Find the device label
+-    if [[ $(readlink -f /dev/disk/by-partlabel/rofs-a) == "${root}" ]]; then
++    if [[ $(readlink -f /dev/disk/by-label/rofs-a) == "${root}" ]]; then
+         echo "a"
+-    elif [[ $(readlink -f /dev/disk/by-partlabel/rofs-b) == "${root}" ]]; then
++    elif [[ $(readlink -f /dev/disk/by-label/rofs-b) == "${root}" ]]; then
+         echo "b"
+     else
+         echo ""
+@@ -549,7 +549,7 @@ function mmc_mount() {
+ 
+     # Check the alternate version, remove it if it's corrupted. This can occur
+     # when the BMC is rebooted in the middle of a code update for example.
+-    if ! fsck.ext4 -p "/dev/disk/by-partlabel/rofs-${secondaryId}"; then
++    if ! fsck.ext4 -p "/dev/disk/by-label/rofs-${secondaryId}"; then
+         flashid="${secondaryId}"
+         mmc_remove
+     fi
+@@ -622,8 +622,8 @@ function mmc_remove() {
+     if [[ "${flashid}" == "${primaryid}" ]]; then
+         return 1
+     fi
+-    dd if=/dev/zero of=/dev/disk/by-partlabel/boot-"${flashid}" count=2048
+-    dd if=/dev/zero of=/dev/disk/by-partlabel/rofs-"${flashid}" count=2048
++    dd if=/dev/zero of=/dev/disk/by-label/boot-"${flashid}" count=2048
++    dd if=/dev/zero of=/dev/disk/by-label/rofs-"${flashid}" count=2048
+ }
+ 
+ # Set the requested version as primary for the BMC to boot from upon reboot.
+@@ -632,6 +632,245 @@ function mmc_setprimary() {
+     fw_setenv bootside "${flashid}"
+ }
+ 
++# mmc mchp section
++
++# Locking mechanism for mmc mchp functions
++LOCKFILE="/tmp/mmc_lock"
++
++function acquire_mmc_lock_mchp() {
++    # Stale lock detection
++    if [ -f "$LOCKFILE" ]; then
++        local lock_pid=$(cat "$LOCKFILE")
++        # Check if the PID is valid and the process is running
++        if [[ ! "$lock_pid" =~ ^[0-9]+$ ]]; then
++            echo "Invalid PID in lock file (pid $lock_pid). Cleaning up..."
++            rm -f "$LOCKFILE"
++        elif [ ! -d "/proc/$lock_pid" ]; then
++            echo "Stale lock detected (pid $lock_pid). Cleaning up..."
++            rm -f "$LOCKFILE"
++        fi
++    fi
++
++    local timeout=30  # Maximum wait time in seconds
++    local start_time=$(date +%s)
++    while ! (set -o noclobber; echo $$ > "$LOCKFILE") 2>/dev/null; do
++        echo "Waiting for lock..."
++        sleep 1
++        local current_time=$(date +%s)
++        if (( current_time - start_time >= timeout )); then
++            echo "Error: Timeout waiting for lock."
++            exit 1
++        fi
++    done
++    echo "Lock acquired by PID $$"
++}
++
++function release_mmc_lock_mchp() {
++    if [ -f "$LOCKFILE" ] && [ "$(cat "$LOCKFILE")" = "$$" ]; then
++        rm -f "$LOCKFILE"
++        echo "Lock released by PID $$"
++    else
++        echo "Lock not owned by this process or already released."
++    fi    
++}
++
++trap release_mmc_lock_mchp EXIT
++trap release_mmc_lock_mchp EXIT SIGINT SIGTERM
++
++# Other mmc mchp helper functions
++
++function check_and_return_device() {
++    local path="/dev/disk/by-label/$1"
++
++    # Check if the symbolic link exists
++    if [ ! -e "${path}" ]; then
++        echo "Error: Could not find /dev/ device for $1"
++        return 1
++    fi
++
++    # Resolve the symbolic link to an absolute path
++    local resolved_path
++    resolved_path=$(readlink -f "${path}")
++
++    # Check if the resolved path matches the expected pattern (/dev/mmcxxxx)
++    if [[ "${resolved_path}" =~ ^/dev/mmcblk[0-9]+p?[0-9]*$ ]]; then
++        echo "${resolved_path}"  # Return the resolved path
++        return 0  # Success
++    else
++        echo "Error: Resolved path for $1 (${resolved_path}) is not a valid /dev/mmcblk device"
++        return 1
++    fi
++}
++
++function mmc_update_mchp() {
++
++    acquire_mmc_lock_mchp
++
++    # Update the secondary (non-running) boot and rofs partitions.
++    label="$(mmc_get_secondary_label)"
++
++
++    check_and_return_device "boot-a"
++    if [ $? -ne 0 ]; then
++        echo "boot-a device check failed. Exiting"
++        release_mmc_lock_mchp
++        exit 1
++    fi
++
++    check_and_return_device "rofs-${label}"
++    if [ $? -ne 0 ]; then
++        echo "rofs-${label} device check failed. Exiting"
++        release_mmc_lock_mchp
++        exit 1
++    fi   
++
++    echo "Unmounting boot partition (/boot -> /dev/disk/by-label/boot-a) before update"
++    umount /boot
++
++    # Always update boot-a partition. boot-b will be used as a "golden" copy, never updated
++    zstd -d -c "${imgpath}/${version}/image-kernel" | dd of="/dev/disk/by-label/boot-a"
++
++    echo "Re-mounting /dev/disk/by-label/boot-a"
++    mount /boot
++
++    rofs_device=$(check_and_return_device "rofs-${label}")
++    if [ $? -ne 0 ]; then
++        echo "rofs-${label} device check failed. Exiting"
++        release_mmc_lock_mchp
++        exit 1
++    fi
++
++    # Update rofs partition
++    zstd -d -c "${imgpath}/${version}/image-rofs" | dd of="${rofs_device}"
++    #zstd -d -c "${imgpath}/${version}/image-rofs" | dd of="/dev/disk/by-label/rofs-${label}"
++
++    # Set the label explicitly after writing the image
++    tune2fs -L "rofs-${label}" "${rofs_device}"
++
++    # Reload udev rules to update /dev/disk/by-label/
++    udevadm trigger
++    udevadm settle --timeout=10 || echo "udevadm settle timed out. Continuing anyway..."
++
++    # Update hostfw if necessary
++    if [ -f "${imgpath}/${version}/image-hostfw" ]; then
++        # Remove patches
++        hostfw_alt="hostfw/alternate"
++        patchdir="/usr/local/share/${hostfw_alt}"
++        if [ -d "${patchdir}" ]; then
++            rm -rf "${patchdir:?}"/*
++        fi
++        if grep -q "${hostfw_alt}" /proc/mounts; then
++            hostfw_alt=$(grep "${hostfw_alt}" /proc/mounts | cut -d " " -f 2)
++            umount "${hostfw_alt}"
++        fi
++        hostfwdir=$(grep "hostfw " /proc/mounts | cut -d " " -f 2)
++        rm -f "${hostfwdir}/hostfw-${flashid}"
++        cp "${imgpath}/${version}/image-hostfw" "${hostfwdir}/hostfw-${label}"
++        mkdir -p "${hostfwdir}/alternate"
++        mount "${hostfwdir}/hostfw-${label}" "${hostfwdir}/alternate" -o ro
++    fi
++
++    set_flashid "${label}"    
++
++    release_mmc_lock_mchp
++}
++
++function mmc_remove_mchp() {
++    acquire_mmc_lock_mchp
++
++    # Render the filesystem unbootable by wiping out the first 1MB, this
++    # invalidates the filesystem header.
++    # Check if the requested id is the one the BMC is running from since dd
++    # can still write and corrupt the running partition.
++
++    primaryid="$(mmc_get_primary_label)"
++    if [[ "${flashid}" == "${primaryid}" ]]; then
++        echo "Error: Cannot erase the partition the BMC is running from."
++        release_mmc_lock_mchp
++        return 1
++    fi
++
++    # As we are using by-label, we need to carry out some extra actions to
++    # make sure /dev/disk/by-label/boot-a and /dev/disk/by-label/rofs-${flashid}
++    # exist after wiping
++
++    # Resolve the partition device for boot-a
++    boot_a_device=$(readlink -f "/dev/disk/by-label/boot-a")
++    if [[ -z "${boot_a_device}" ]]; then
++        echo "Error: Partition device for label boot-a not found."
++        release_mmc_lock_mchp
++        return 1
++    fi
++
++    # Resolve the partition device for rofs-${flashid}
++    rofs_device=$(readlink -f "/dev/disk/by-label/rofs-${flashid}")
++    if [[ -z "${rofs_device}" ]]; then
++        echo "Error: Partition device for label rofs-${flashid} not found."
++        release_mmc_lock_mchp
++        return 1
++    fi
++
++    echo "boot-a device: ${boot_a_device}"
++    echo "rofs-${flashid} device: ${rofs_device}"
++
++    echo "stopping udev processing"
++    udevadm control --stop-exec-queue
++
++    # Wipe the first 1MB of boot-a
++    dd if=/dev/zero of="${boot_a_device}" count=2048
++
++    # Wipe the first 1MB of rofs-${flashid}
++    dd if=/dev/zero of="${rofs_device}" count=2048
++
++    echo "starting udev processing"
++    udevadm control --start-exec-queue
++    udevadm settle --timeout=10 || echo "udevadm settle timed out. Proceeding with manual symlink check..."
++
++    # Wait until udev has removed /dev/disk/by-label/boot-a and /dev/disk/by-label/rofs-${flashid} 
++    echo "Waiting for udev to remove symlinks..."
++    timeout=3  # Maximum wait time in seconds
++    start_time=$(date +%s)
++    while [[ -e "/dev/disk/by-label/boot-a" || -e "/dev/disk/by-label/rofs-${flashid}" ]]; do
++        sleep 0.5  # Wait for 500ms before checking again
++        current_time=$(date +%s)
++        if (( current_time - start_time >= timeout )); then
++            echo "Timeout waiting for udev to remove symlinks."
++            break
++        fi
++    done
++    echo "Finished waiting for symlinks removal."
++
++    # Manually recreate the symlink for boot-a
++    echo "Recreating symlink for boot-a..."
++    ln -sf "${boot_a_device}" "/dev/disk/by-label/boot-a"
++
++    # Manually recreate the symlink for rofs-${flashid}
++    echo "Recreating symlink for rofs-${flashid}..."
++    ln -sf "${rofs_device}" "/dev/disk/by-label/rofs-${flashid}"
++
++    release_mmc_lock_mchp
++}
++
++function mmc_setprimary_mchp() {
++    if [ "${flashid}" != "a" ] && [ "${flashid}" != "b" ]; then
++        echo "mmc_setprimary_mchp: incorrect flash id ${flashid}"
++        old_bootside="$(fw_printenv bootside | cut -d'=' -f2)"
++        if [ "$old_bootside" == "a" ]; then
++            flashid="b"
++        elif [ "$old_bootside" == "b" ]; then
++            flashid="a"
++        else
++            echo "No previous bootside, no idea what flashid to use"
++            exit 1
++        fi
++
++        echo "Assuming swap expected (e.g. for removal case). Previous bootside = $old_bootside, setting flashid to $flashid"
++    fi
++
++    # Point root to the flashid of the requested BMC rootfs.
++    fw_setenv bootside "${flashid}"
++}
++
+ function mmc_mirroruboot() {
+     # Get current boot device; 0-primary_bootdev device; 1 - alt_bootdev
+     bootdev=$(cat /sys/kernel/debug/aspeed/sbc/abr_image)
+@@ -659,6 +898,8 @@ function mmc_mirroruboot() {
+     fi
+ }
+ 
++echo "Called $(realpath $0) $@"
++
+ case "$1" in
+     mtduboot)
+         reqmtd="$2"
+@@ -725,22 +966,31 @@ case "$1" in
+     mmc)
+         version="$2"
+         imgpath="$3"
+-        mmc_update
++        echo "Calling mmc_update_mchp, version = $version, imgpath = $imgpath"
++        mmc_update_mchp
++        echo "Finished mmc_update_mchp"
+         ;;
+     mmc-mount)
+         mediaDir="$2"
++        echo "Calling mmc_mount, mediaDir = $mediaDir"
+         mmc_mount
++        echo "Finished mmc_mount"
+         ;;
+     mmc-remove)
+         flashid="$2"
+-        mmc_remove
++        echo "Calling mmc_remove_mchp, flashid = $flashid"
++        mmc_remove_mchp
++        echo "Finished mmc_remove_mchp"
+         ;;
+     mmc-setprimary)
+         flashid="$2"
+-        mmc_setprimary
++        echo "Calling mmc_setprimary_mchp, flashid = $flashid"
++        mmc_setprimary_mchp
++        echo "Finished mmc_setprimary_mchp"
+         ;;
+     mmc-mirroruboot)
+-        mmc_mirroruboot
++        echo "Ignoring mmc-mirroruboot"
++        #mmc_mirroruboot
+         ;;
+     static-altfs)
+         mount_static_alt "$2" "$3" "$4"
+@@ -753,3 +1003,4 @@ case "$1" in
+         exit 1
+         ;;
+ esac
++
